@@ -1,0 +1,73 @@
+
+###Enviroment 
+- Operating system: MAC OS X EI Capitan
+- Language: python
+- Lib: PIL, requests, sklearn, numpy
+
+###Program
+
+####`scrapyPicture.py`
+- A web scrawler to download the verification code from website.
+- Url link : 'http://scm.sf-express.com/isc-vmi/loginmgmt/imgcode?a=0.18090831750297091'.
+- Download the images as *.jpg and save them into folder `/pictures`.
+
+
+####`binary.py`
+- This program is used to binarilize pictures.
+- This program contains two classes: class BinarizingImage is used to change the images into binary base, and class savingImage is used to save the splitted letters into folder `/splitPhotos`.
+
+#####class BinarizingImage: 
+
+######functions:
+- loadPicture(self, _filePath, _threshold): Load pictures.
+- binarizing(self): Using threshold to binarilize the pictures.
+- depoint(self): Using connected component labeling method to suppress noise.
+- equidistanceSegment(self): split image in equal distance
+
+#####class savingImage: 
+- save pictures as *.bmp, input an Image list.
+
+######functions:
+- saveImage(self, images): save images into folder '/splitPhotos'.
+
+
+####`createTrainingDataset.py`
+- This program is used to divide images into different folders by their label.
+- After that, we need to justify the result manully, the accuray of OCR is about 80%.
+
+####`Extraction.py`
+- use to write the training dataset as `traindataX.csv` and `traindatay.csv`
+
+#####class extractFeatures:
+
+######functions:
+- getBinaryPixel(self, _filePath): from *.bmp get get a binary pixel array.
+- getFileNames(self, _dirs): Scanning all the file in the dirs.
+- writeFile(self): Writing training dataset.
+
+####`SVMmodel.py`
+- This program is used to train SVM model, and use joblib to dump the model as `SVM_PKL.pkl`.
+
+#####class SVMmodel:
+
+######functions:
+- loadData(self, _train_X, _train_y): from 'traindataX.csv' and 'traindatay.csv', load training dataset.
+- train(self): use clf.fit(X,y) to train the model.
+- selfTest(self): self test the accuary of our model.
+- searchBestParameter(self): using sklearn.grid_search to find the best parameters of SVM model.
+
+####`finalPrediction.py`
+- This program use trained SVM model to varify a new code.
+
+#####class predictionModel:
+
+######functions:
+- loaddata(self, filePath): from `traindataX.csv` and `traindatay.csv`, load training dataset.
+- SVMpredict(self): use clf.fit(X,y) to train the model.
+
+
+####`KneighorsModelPrediction.py`
+- This program use Kmeans method to varify a new varification code.
+
+####`classification.py`
+- This program will use trained SVM model to verify the images in `testpictures` folder.
